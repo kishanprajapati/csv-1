@@ -1,0 +1,49 @@
+<p-messages [(value)]="message" [enableService]="false"></p-messages>
+
+<p-toolbar>
+    <div class="p-toolbar-group-left">
+        <p-fileUpload name="mycsv" [multiple]="true" accept=".csv" [customUpload]="true" (uploadHandler)="showData($event)">
+        </p-fileUpload>
+    </div>
+    <div class="p-toolbar-group-right">
+        <p-button *ngIf="showTable" (click)="downloadCsv()">Download</p-button>
+    </div>
+</p-toolbar>
+<p-table #datatable *ngIf="showTable" [value]="presentData" styleClass="p-datatable-gridlines">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Type</th>
+            <th pSortableColumn="title">Title <p-sortIcon field="code"></p-sortIcon></th>
+            <th>ISBN</th>
+            <th>Authors</th>
+            <th>Description</th>
+            <th>Published At</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>
+                <input type="text" pInputText (input)="datatable.filter(sendValue($event), 'isbn','contains')">
+            </th>
+            <th>
+                <input type="text" pInputText (input)="datatable.filter(sendValue($event), 'authors','contains')">
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-material>
+        <tr>
+            <td style="width:10%">{{material.type}}</td>
+            <td style="width:15%">{{material.title}}</td>
+            <td style="width:10%">{{material.isbn}}</td>
+            <td style="width:25%">
+                <ol>
+                    <li *ngFor="let author of material.authors">{{getAuthorsName(author)}}</li>
+                </ol>
+            </td>
+            <td style="width:30%">{{material.description}}</td>
+            <td style="width:10%">{{material.publishedAt}}</td>
+        </tr>
+    </ng-template>
+</p-table>
